@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .form-group { margin: 15px 0; }
+        input, button { padding: 10px; margin: 5px; }
+        .prestamo { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 3px; }
+        .eliminar { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>🔄 Gestión de Préstamos</h1>
+    <a href="/">← Volver al inicio</a>
+
+    <h2>Agregar Nuevo Préstamo</h2>
+    <form id="formPrestamo">
+        <input type="number" id="libroId" placeholder="ID Libro" required>
+        <input type="number" id="usuarioId" placeholder="ID Usuario" required>
+        <input type="date" id="fechaPrestamo" required>
+        <input type="date" id="fechaDevolucion" required>
+        <button type="submit">Agregar Préstamo</button>
+    </form>
+
+    <h2>Lista de Préstamos</h2>
+    <div id="listaPrestamos"></div>
+
+    <script>
+        cargarPrestamos();
+
+        document.getElementById('formPrestamo').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const prestamo = {
+                libroId: document.getElementById('libroId').value,
+                usuarioId: document.getElementById('usuarioId').value,
+                fechaPrestamo: document.getElementById('fechaPrestamo').value,
+                fechaDevolucion: document.getElementById('fechaDevolucion').value
+            };
+
+            try {
+                const response = await fetch('/prestamos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(prestamo)
+                });
+                
+                if (response.ok) {
+                    cargarPrestamos();
+                    document.getElementById('formPrestamo').reset();
+                    alert('Préstamo agregado correctamente!');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        async function cargarPrestamos() {
+            try {
+                const response = await fetch('/prestamos');
+                const prestamos = await response.json();
+                
+                const contenedor = document.getElementById('listaPrestamos');
+                contenedor.innerHTML = prestamos.map(prestamo => `
+                    <div class="prestamo">
+                        <h3>Préstamo #${prestamo.id}</h3>
+                        <p><strong>Libro ID:</strong> ${prestamo.libroId}</p>
+                        <p><strong>Usuario ID:</strong> ${prestamo.usuarioId}</p>
+                        <p><strong>Fecha Préstamo:</strong> ${prestamo.fechaPrestamo}</p>
+                        <p><strong>Fecha Devolución:</strong> ${prestamo.fechaDevolucion}</p>
+                        <p><strong>Estado:</strong> ${prestamo.estado}</p>
+                        <button onclick="eliminarPrestamo(${prestamo.id})" class="eliminar">Eliminar</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function eliminarPrestamo(id) {
+            if (confirm('¿Estás seguro de eliminar este préstamo?')) {
+                try {
+                    const response = await fetch(`/prestamos/${id}`, { 
+                        method: 'DELETE' 
+                    });
+                    if (response.ok) {
+                        cargarPrestamos();
+                        alert('Préstamo eliminado correctamente!');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

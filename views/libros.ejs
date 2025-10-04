@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .form-group { margin: 15px 0; }
+        input, button { padding: 10px; margin: 5px; }
+        .libro { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 3px; }
+        .eliminar { background: #dc3545; }
+        .actualizar { background: #ffc107; color: black; }
+    </style>
+</head>
+<body>
+    <h1>📚 Gestión de Libros</h1>
+    <a href="/">← Volver al inicio</a>
+
+    <h2>Agregar Nuevo Libro</h2>
+    <form id="formLibro">
+        <input type="text" id="titulo" placeholder="Título" required>
+        <input type="text" id="autor" placeholder="Autor" required>
+        <input type="number" id="año" placeholder="Año" required>
+        <button type="submit">Agregar Libro</button>
+    </form>
+
+    <h2>Lista de Libros</h2>
+    <div id="listaLibros"></div>
+
+    <script>
+        // Cargar libros al iniciar
+        cargarLibros();
+
+        // Agregar libro
+        document.getElementById('formLibro').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const libro = {
+                titulo: document.getElementById('titulo').value,
+                autor: document.getElementById('autor').value,
+                año: document.getElementById('año').value
+            };
+
+            try {
+                const response = await fetch('/libros', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(libro)
+                });
+                
+                if (response.ok) {
+                    cargarLibros();
+                    document.getElementById('formLibro').reset();
+                    alert('Libro agregado correctamente!');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        async function cargarLibros() {
+            try {
+                const response = await fetch('/libros');
+                const libros = await response.json();
+                
+                const contenedor = document.getElementById('listaLibros');
+                contenedor.innerHTML = libros.map(libro => `
+                    <div class="libro">
+                        <h3>${libro.titulo}</h3>
+                        <p><strong>ID:</strong> ${libro.id}</p>
+                        <p><strong>Autor:</strong> ${libro.autor}</p>
+                        <p><strong>Año:</strong> ${libro.año}</p>
+                        <p><strong>Disponible:</strong> ${libro.disponible ? 'Sí' : 'No'}</p>
+                        <button onclick="eliminarLibro(${libro.id})" class="eliminar">Eliminar</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function eliminarLibro(id) {
+            if (confirm('¿Estás seguro de eliminar este libro?')) {
+                try {
+                    const response = await fetch(`/libros/${id}`, { 
+                        method: 'DELETE' 
+                    });
+                    if (response.ok) {
+                        cargarLibros();
+                        alert('Libro eliminado correctamente!');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

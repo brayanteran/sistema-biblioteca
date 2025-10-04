@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .form-group { margin: 15px 0; }
+        input, button { padding: 10px; margin: 5px; }
+        .usuario { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 3px; }
+        .eliminar { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>👥 Gestión de Usuarios</h1>
+    <a href="/">← Volver al inicio</a>
+
+    <h2>Agregar Nuevo Usuario</h2>
+    <form id="formUsuario">
+        <input type="text" id="nombre" placeholder="Nombre completo" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="telefono" placeholder="Teléfono" required>
+        <button type="submit">Agregar Usuario</button>
+    </form>
+
+    <h2>Lista de Usuarios</h2>
+    <div id="listaUsuarios"></div>
+
+    <script>
+        cargarUsuarios();
+
+        document.getElementById('formUsuario').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const usuario = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value
+            };
+
+            try {
+                const response = await fetch('/usuarios', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(usuario)
+                });
+                
+                if (response.ok) {
+                    cargarUsuarios();
+                    document.getElementById('formUsuario').reset();
+                    alert('Usuario agregado correctamente!');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        async function cargarUsuarios() {
+            try {
+                const response = await fetch('/usuarios');
+                const usuarios = await response.json();
+                
+                const contenedor = document.getElementById('listaUsuarios');
+                contenedor.innerHTML = usuarios.map(usuario => `
+                    <div class="usuario">
+                        <h3>${usuario.nombre}</h3>
+                        <p><strong>ID:</strong> ${usuario.id}</p>
+                        <p><strong>Email:</strong> ${usuario.email}</p>
+                        <p><strong>Teléfono:</strong> ${usuario.telefono}</p>
+                        <p><strong>Fecha Registro:</strong> ${usuario.fechaRegistro}</p>
+                        <button onclick="eliminarUsuario(${usuario.id})" class="eliminar">Eliminar</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function eliminarUsuario(id) {
+            if (confirm('¿Estás seguro de eliminar este usuario?')) {
+                try {
+                    const response = await fetch(`/usuarios/${id}`, { 
+                        method: 'DELETE' 
+                    });
+                    if (response.ok) {
+                        cargarUsuarios();
+                        alert('Usuario eliminado correctamente!');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

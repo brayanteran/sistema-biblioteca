@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        .menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
+        .menu a { display: block; padding: 20px; background: #007bff; color: white; text-decoration: none; border-radius: 8px; text-align: center; font-size: 18px; transition: background 0.3s; }
+        .menu a:hover { background: #0056b3; transform: translateY(-2px); }
+        .endpoints { background: #f8f9fa; padding: 20px; border-radius: 5px; margin-top: 30px; }
+        .endpoints h2 { margin-top: 0; }
+        .endpoint-list { columns: 2; }
+        .endpoint-list li { margin-bottom: 10px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Sistema de Gestión de Biblioteca</h1>
+        
+        <div class="menu">
+            <a href="/libros/vista">📚 Gestión de Libros</a>
+            <a href="/autores/vista">✍️ Gestión de Autores</a>
+            <a href="/usuarios/vista">👥 Gestión de Usuarios</a>
+            <a href="/prestamos/vista">🔄 Gestión de Préstamos</a>
+        </div>
+
+        <div class="endpoints">
+            <h2>📋 Endpoints de la API</h2>
+            <div class="endpoint-list">
+                <h3>GET Endpoints:</h3>
+                <ul>
+                    <li><strong>GET</strong> /libros - Listar libros</li>
+                    <li><strong>GET</strong> /libros/ultimos - Últimos 5 libros</li>
+                    <li><strong>GET</strong> /libros/rango-fecha - Filtrar por fecha</li>
+                    <li><strong>GET</strong> /libros/1 - Libro por ID</li>
+                    <li><strong>GET</strong> /autores - Listar autores</li>
+                    <li><strong>GET</strong> /usuarios - Listar usuarios</li>
+                    <li><strong>GET</strong> /prestamos - Listar préstamos</li>
+                </ul>
+                
+                <h3>POST Endpoints:</h3>
+                <ul>
+                    <li><strong>POST</strong> /libros - Crear libro</li>
+                    <li><strong>POST</strong> /autores - Crear autor</li>
+                    <li><strong>POST</strong> /usuarios - Crear usuario</li>
+                </ul>
+
+                <h3>PUT Endpoints:</h3>
+                <ul>
+                    <li><strong>PUT</strong> /libros/1 - Actualizar libro</li>
+                    <li><strong>PUT</strong> /autores/1 - Actualizar autor</li>
+                </ul>
+
+                <h3>DELETE Endpoints:</h3>
+                <ul>
+                    <li><strong>DELETE</strong> /libros/1 - Eliminar libro</li>
+                    <li><strong>DELETE</strong> /prestamos/1 - Eliminar préstamo</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .form-group { margin: 15px 0; }
+        input, button { padding: 10px; margin: 5px; }
+        .autor { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { background: #28a745; color: white; border: none; cursor: pointer; border-radius: 3px; }
+        .eliminar { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>✍️ Gestión de Autores</h1>
+    <a href="/">← Volver al inicio</a>
+
+    <h2>Agregar Nuevo Autor</h2>
+    <form id="formAutor">
+        <input type="text" id="nombre" placeholder="Nombre" required>
+        <input type="text" id="pais" placeholder="País" required>
+        <input type="date" id="fechaNacimiento" required>
+        <button type="submit">Agregar Autor</button>
+    </form>
+
+    <h2>Lista de Autores</h2>
+    <div id="listaAutores"></div>
+
+    <script>
+        cargarAutores();
+
+        document.getElementById('formAutor').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const autor = {
+                nombre: document.getElementById('nombre').value,
+                pais: document.getElementById('pais').value,
+                fechaNacimiento: document.getElementById('fechaNacimiento').value
+            };
+
+            try {
+                const response = await fetch('/autores', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(autor)
+                });
+                
+                if (response.ok) {
+                    cargarAutores();
+                    document.getElementById('formAutor').reset();
+                    alert('Autor agregado correctamente!');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        async function cargarAutores() {
+            try {
+                const response = await fetch('/autores');
+                const autores = await response.json();
+                
+                const contenedor = document.getElementById('listaAutores');
+                contenedor.innerHTML = autores.map(autor => `
+                    <div class="autor">
+                        <h3>${autor.nombre}</h3>
+                        <p><strong>ID:</strong> ${autor.id}</p>
+                        <p><strong>País:</strong> ${autor.pais}</p>
+                        <p><strong>Fecha Nacimiento:</strong> ${autor.fechaNacimiento}</p>
+                        <button onclick="eliminarAutor(${autor.id})" class="eliminar">Eliminar</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function eliminarAutor(id) {
+            if (confirm('¿Estás seguro de eliminar este autor?')) {
+                try {
+                    const response = await fetch(`/autores/${id}`, { 
+                        method: 'DELETE' 
+                    });
+                    if (response.ok) {
+                        cargarAutores();
+                        alert('Autor eliminado correctamente!');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
