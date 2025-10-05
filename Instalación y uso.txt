@@ -1,0 +1,20 @@
+INSTALACIÓN Y USO
+Requisitos del Sistema
+Node.js versión 14 o superior
+
+npm (Node Package Manager)
+
+# Clonar el repositorio
+git clone https://github.com/brayanteran/sistema-biblioteca.git
+
+# Navegar al directorio
+cd sistema-biblioteca
+
+# Instalar dependencias
+npm install
+
+# Ejecutar en modo desarrollo
+npm run dev
+
+# Acceder al sistema
+http://localhost:3000

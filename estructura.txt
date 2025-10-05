@@ -1,0 +1,19 @@
+sistema-biblioteca/
+├── controllers/          # Lógica de negocio
+│   ├── LibrosController.js
+│   ├── AutoresController.js
+│   ├── UsuariosController.js
+│   └── PrestamosController.js
+├── routes/              # Definición de endpoints
+│   ├── libros.js
+│   ├── autores.js
+│   ├── usuarios.js
+│   └── prestamos.js
+├── views/               # Plantillas EJS
+│   ├── index.ejs
+│   ├── libros.ejs
+│   ├── autores.ejs
+│   ├── usuarios.ejs
+│   └── prestamos.ejs
+├── app.js              # Configuración principal
+└── package.json        # Dependencias del proyecto

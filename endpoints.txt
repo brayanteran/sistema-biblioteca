@@ -1,0 +1,30 @@
+ENDPOINTS IMPLEMENTADOS
+Métodos GET (6 endpoints)
+GET /libros - Listado completo de libros
+
+GET /libros/ultimos - Últimos 5 libros registrados
+
+GET /libros/rango-fecha - Filtrado por rango de fechas
+
+GET /libros/:id - Consulta de libro por ID
+
+GET /autores - Listado completo de autores
+
+GET /usuarios - Listado completo de usuarios
+
+Métodos POST (3 endpoints)
+POST /libros - Creación de nuevos libros
+
+POST /autores - Registro de nuevos autores
+
+POST /usuarios - Registro de nuevos usuarios
+
+Métodos PUT (2 endpoints)
+PUT /libros/:id - Actualización de libros existentes
+
+PUT /autores/:id - Actualización de autores existentes
+
+Métodos DELETE (2 endpoints)
+DELETE /libros/:id - Eliminación de libros
+
+DELETE /prestamos/:id - Eliminación de préstamos
